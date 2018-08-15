@@ -23,20 +23,20 @@ import (
 */
 
 const (
-	AggregateTradeStream string = "%s@aggtrade"
-	TradeStream          string = "%s@trade"
-	PartialDepthStream   string = "%s@depth%d"
-	DiffDepthStream      string = "%s@depth"
+	//	AggregateTradeStream string = "%s@aggtrade"
+	TradeStream string = "%s@trade"
+	//	PartialDepthStream   string = "%s@depth%d"
+	DiffDepthStream string = "%s@depth"
 )
 
-type Channels map[string]chan *json.RawMessage
+type Events map[string]chan *json.RawMessage
 
 type WsEvent struct {
 	Stream string          `json:"stream"`
 	Data   json.RawMessage `json:"data"`
 }
 
-func createStreamsParams(channels *Channels) string {
+func createStreamsParams(channels *Events) string {
 	streamNames := make([]string, len(*channels))
 	i := 0
 	for streamName := range *channels {
@@ -47,9 +47,9 @@ func createStreamsParams(channels *Channels) string {
 	return strings.Join(streamNames, "/")
 }
 
-func OpenWebSocketStreams(channels Channels) (chan struct{}, error) {
+func OpenWebSocketStreams(eventsName Events) (chan struct{}, error) {
 
-	url := fmt.Sprintf("wss://stream.binance.com:9443/stream?streams=%s", createStreamsParams(&channels))
+	url := fmt.Sprintf("wss://stream.binance.com:9443/stream?streams=%s", createStreamsParams(&eventsName))
 	c, _, err := websocket.DefaultDialer.Dial(url, nil)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func OpenWebSocketStreams(channels Channels) (chan struct{}, error) {
 					fmt.Println("wsRead", err)
 					return
 				}
-				channels[eventData.Stream] <- &eventData.Data
+				eventsName[eventData.Stream] <- &eventData.Data
 			}
 		}
 	}()

@@ -9,7 +9,7 @@ import (
 
 func TestCreateStreamsParams(t *testing.T) {
 
-	channels := make(Channels)
+	channels := make(Events)
 
 	channels["sn1"] = make(chan *json.RawMessage)
 	channels["sn2"] = make(chan *json.RawMessage)
