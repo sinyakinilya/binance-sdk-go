@@ -6,9 +6,10 @@ import (
 )
 
 type TradeEvent struct {
-	Type          string  `json:"e"`
-	EventTime     int64   `json:"E"`
-	Symbol        string  `json:"s"`
+	Type      string `json:"e"`
+	EventTime int64  `json:"E"`
+	Symbol    string `json:"s"`
+
 	TradeID       uint64  `json:"t"`
 	Price         float64 `json:"p,string"`
 	Quantity      float64 `json:"q,string"`
